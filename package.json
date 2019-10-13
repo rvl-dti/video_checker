@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "dotenv": "^8.1.0",
     "fluent-ffmpeg": "^2.1.2"
   },
   "devDependencies": {},

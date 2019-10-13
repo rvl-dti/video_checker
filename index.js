@@ -1,6 +1,9 @@
 const fs = require("fs");
 const ffmpeg = require('fluent-ffmpeg');
-const path = 'X:\\n\\projects\\vanloon\\videoserv\\video';
+const dotenv = require('dotenv');
+dotenv.config();
+const path = process.env.VIDEO_FOLDER;
+//const path = 'X:\\n\\projects\\vanloon\\videoserv\\video';
 
 const twitter_criteria = (x)=>{
   res = x.videoCodec == 'h264' && (x.audioCodec == 'aac' || x.audioCodec === null) && x.duration <= 140 && 
@@ -40,7 +43,7 @@ const getSize = (h=>{
   return new Promise((resolve, reject)=>{
     fs.stat(h.fullname, (err, res) =>{
       if (err) reject(err);
-      resolve(Object.assign(h, {size:res['size']}));
+      resolve(Object.assign(h, {size:res['size'], time:res['birthtime']}));
     })
   })
 })
