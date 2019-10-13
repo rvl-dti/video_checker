@@ -3,8 +3,9 @@ const ffmpeg = require('fluent-ffmpeg');
 const path = 'X:\\n\\projects\\vanloon\\videoserv\\video';
 
 const twitter_criteria = (x)=>{
-  return x.videoCodec == 'h264' && x.audioCodec == 'aac' && x.duration <= 140 && 
-         x.width <= 1920 && x.height <= 1900 && x.size <= 512000000;
+  res = x.videoCodec == 'h264' && (x.audioCodec == 'aac' || x.audioCodec === null) && x.duration <= 140 && 
+         x.width <= 1920 && x.height <= 1900 && x.size <= 512000000 && x.format == 'mov,mp4,m4a,3gp,3g2,mj2';
+  return res;
 }
 
 const getMeta = (fullname)=>{
@@ -15,7 +16,8 @@ const getMeta = (fullname)=>{
         }
         var audioCodec = null;
         var videoCodec = null;
-        var width, height, duration;
+        var width, height, duration, format;
+        format = metadata.format.format_name;
         metadata.streams.forEach(function(stream){
             if (stream.codec_type === "video"){
                 videoCodec = stream.codec_name;
@@ -28,7 +30,7 @@ const getMeta = (fullname)=>{
                 audioCodec = stream.codec_name;
             }
         });
-        res = {fullname, videoCodec, audioCodec, duration, width, height};
+        res = {fullname, videoCodec, audioCodec, duration, width, height, format};
         resolve(res);
     });
   });
@@ -53,5 +55,6 @@ Promise.all(ps)
 .then(xs=>{
   let res = xs.filter((x)=>!twitter_criteria(x));
   console.log(res);
+  console.log(res.length);
 })
 .catch(err=>console.log(err));
